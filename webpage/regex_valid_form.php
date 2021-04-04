@@ -5,6 +5,8 @@
 	$replaceText="";
 	$replacedText="";
 
+	$message = "";
+
 	$match="Not checked yet.";
 
 if ($_SERVER["REQUEST_METHOD"]=="POST") {
@@ -19,6 +21,21 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
 					} else {
 						$match="Does not match!";
 					}
+	
+	if (preg_match($pattern . "g", $text)){
+		$message = $message . "Global search matches \n";
+	}
+	if (preg_match("/.+@.+\..+/g", $text)){
+		$message = $message . "Email search matches \n";
+	}
+	if (preg_match("//+998/-\d{2}-\d{3}-\d{4}/", $text)){
+		$message = $message . "Phone number search matches \n";
+	}
+	
+	$no_space = preg_replace("/\s/g", $text, "");
+		$message = $message . "String without whitespaces: " . $no_space;
+	
+
 }
 
 ?>
@@ -47,11 +64,13 @@ if ($_SERVER["REQUEST_METHOD"]=="POST") {
 
 			<dt>Replaced Text</dt>
 			<dd> <code><?=	$replacedText ?></code></dd>
-
+			
 			<dt>&nbsp;</dt>
 			<dd><input type="submit" value="Check"></dd>
 		</dl>
-
 	</form>
+	<p>
+	<?= $message ?>
+	</p>
 </body>
 </html>
